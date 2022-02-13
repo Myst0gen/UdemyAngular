@@ -9,10 +9,31 @@ namespace Core.Specifications
 {
     public class ProductsSpecifications : BaseSpecification<Product>
     {
-        public ProductsSpecifications()
+        public ProductsSpecifications(ProductSpecParams specParams) : base
+        (x =>
+         (string.IsNullOrWhiteSpace(specParams.search) || x.Name.ToLower().Contains(specParams.search)) &&
+         (!specParams.brandId.HasValue || x.ProductBrandId == specParams.brandId) &&
+         (!specParams.typeId.HasValue || x.ProductTypeId == specParams.typeId)
+        )
         {
             AddIncludes(x => x.ProductBrand);
             AddIncludes(x => x.ProductType);
+            ApplyPaging(specParams.pageSize * (specParams.pageIndex - 1), specParams.pageSize);
+            if (!string.IsNullOrWhiteSpace(specParams.sort))
+            {
+                switch (specParams.sort)
+                {
+                    case "priceAsc":
+                        AddOrderBy(p => p.Price);
+                        break;
+                    case "priceDesc":
+                        AddOrderByDescending(p => p.Price);
+                        break;
+                    default:
+                        AddOrderBy(n => n.Name);
+                        break;
+                }
+            }
         }
 
         public ProductsSpecifications(int id)

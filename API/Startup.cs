@@ -43,7 +43,7 @@ namespace API
             {
                 opt.AddPolicy("CorsPolicy", x =>
                 {
-                    x.AllowAnyMethod().AllowAnyOrigin();
+                    x.AllowAnyOrigin();
                 });
             });
         }

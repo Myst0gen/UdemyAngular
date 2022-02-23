@@ -19,20 +19,18 @@ namespace Core.Specifications
             AddIncludes(x => x.ProductBrand);
             AddIncludes(x => x.ProductType);
             ApplyPaging(specParams.pageSize * (specParams.pageIndex - 1), specParams.pageSize);
-            if (!string.IsNullOrWhiteSpace(specParams.sort))
+
+            switch (specParams.sort)
             {
-                switch (specParams.sort)
-                {
-                    case "priceAsc":
-                        AddOrderBy(p => p.Price);
-                        break;
-                    case "priceDesc":
-                        AddOrderByDescending(p => p.Price);
-                        break;
-                    default:
-                        AddOrderBy(n => n.Name);
-                        break;
-                }
+                case "priceAsc":
+                    AddOrderBy(p => p.Price);
+                    break;
+                case "priceDesc":
+                    AddOrderByDescending(p => p.Price);
+                    break;
+                default:
+                    AddOrderBy(n => n.Name);
+                    break;
             }
         }
 
